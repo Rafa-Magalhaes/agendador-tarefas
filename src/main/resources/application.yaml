@@ -1,3 +1,11 @@
 spring:
   application:
     name: agendador-tarefas
+
+jwt:
+  secret: minhaChaveSuperSecretaParaAssinarOToken1234567890
+  expiration: 3600000   # 1 hora em milissegundos (3.600.000 ms)
+
+usuario:
+  service:
+    url: ${USUARIO_SERVICE_URL:http://localhost:8080}
