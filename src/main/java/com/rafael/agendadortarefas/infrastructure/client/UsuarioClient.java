@@ -13,6 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 )
 public interface UsuarioClient {
 
-    @GetMapping("/internal/usuarios/{id}")
+    @GetMapping("/usuarios/internal/{id}")
     UsuarioResponseDTO buscarUsuarioPorId(@PathVariable("id") Long id);
 }
