@@ -1,52 +1,70 @@
 package com.rafael.agendadortarefas.infrastructure.business;
 
-import com.rafael.agendadortarefas.infrastructure.client.UsuarioClient;
+import com.rafael.agendadortarefas.infrastructure.business.converter.TarefaConverter;
 import com.rafael.agendadortarefas.infrastructure.dto.TarefaRequestDTO;
 import com.rafael.agendadortarefas.infrastructure.dto.TarefaResponseDTO;
-import com.rafael.agendadortarefas.infrastructure.dto.UsuarioResponseDTO;
 import com.rafael.agendadortarefas.infrastructure.entity.StatusTarefa;
 import com.rafael.agendadortarefas.infrastructure.entity.Tarefa;
+import com.rafael.agendadortarefas.infrastructure.exceptions.ResourceNotFoundException;
 import com.rafael.agendadortarefas.infrastructure.repository.TarefaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TarefaService {
 
     private final TarefaRepository tarefaRepository;
-    private final UsuarioClient usuarioClient;   // ← NOVO
+    private final TarefaConverter tarefaConverter;
 
+    // ==================== MÉTODO POST ====================
+
+    @Transactional
     public TarefaResponseDTO criarTarefa(TarefaRequestDTO dto) {
 
-        // ====================== NOVA INTEGRAÇÃO ======================
-        // Chama o projeto 'usuario' para validar se o usuário existe
-        UsuarioResponseDTO usuario = usuarioClient.buscarUsuarioPorId(dto.getUsuarioId());
+        // Validação via Feign Client (integração com o serviço de usuários)
+        // UsuarioResponseDTO usuario = usuarioClient.buscarUsuarioPorId(dto.getUsuarioId());
 
-        // ============================================================
-
-        Tarefa tarefa = new Tarefa();
-        tarefa.setUsuarioId(dto.getUsuarioId());
-        tarefa.setTitulo(dto.getTitulo());
-        tarefa.setDescricao(dto.getDescricao());
-        tarefa.setDataHoraAgendada(dto.getDataHoraAgendada());
+        Tarefa tarefa = tarefaConverter.toEntity(dto);
         tarefa.setStatus(StatusTarefa.PENDENTE);
+        tarefa.setDataCriacao(LocalDateTime.now());
 
         Tarefa tarefaSalva = tarefaRepository.save(tarefa);
 
-        return converterParaResponseDTO(tarefaSalva);
+        return tarefaConverter.toResponseDTO(tarefaSalva);
     }
 
-    private TarefaResponseDTO converterParaResponseDTO(Tarefa tarefa) {
-        TarefaResponseDTO response = new TarefaResponseDTO();
-        response.setId(tarefa.getId());
-        response.setUsuarioId(tarefa.getUsuarioId());
-        response.setTitulo(tarefa.getTitulo());
-        response.setDescricao(tarefa.getDescricao());
-        response.setDataHoraAgendada(tarefa.getDataHoraAgendada());
-        response.setDataCriacao(tarefa.getDataCriacao());
-        response.setStatus(tarefa.getStatus().name());
+    // ==================== MÉTODOS GET ====================
 
-        return response;
+    @Transactional(readOnly = true)
+    public TarefaResponseDTO buscarPorId(String id) {
+        Tarefa tarefa = tarefaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada com o id: " + id));
+        return tarefaConverter.toResponseDTO(tarefa);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TarefaResponseDTO> buscarPorUsuarioId(Long usuarioId) {
+        List<Tarefa> tarefas = tarefaRepository.findByUsuarioId(usuarioId);
+        return tarefas.stream()
+                .map(tarefaConverter::toResponseDTO)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<TarefaResponseDTO> buscarPorPeriodo(LocalDateTime dataInicial, LocalDateTime dataFinal) {
+
+        if (dataInicial.isAfter(dataFinal)) {
+            throw new IllegalArgumentException("A data inicial não pode ser maior que a data final");
+        }
+
+        List<Tarefa> tarefas = tarefaRepository.findByDataHoraAgendadaBetween(dataInicial, dataFinal);
+        return tarefas.stream()
+                .map(tarefaConverter::toResponseDTO)
+                .toList();
     }
 }
