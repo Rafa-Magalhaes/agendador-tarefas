@@ -3,6 +3,7 @@ package com.rafael.agendadortarefas.infrastructure.controller;
 import com.rafael.agendadortarefas.infrastructure.business.TarefaService;
 import com.rafael.agendadortarefas.infrastructure.dto.TarefaRequestDTO;
 import com.rafael.agendadortarefas.infrastructure.dto.TarefaResponseDTO;
+import com.rafael.agendadortarefas.infrastructure.entity.StatusTarefa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -20,38 +21,47 @@ public class TarefaController {
     private final TarefaService tarefaService;
 
     @PostMapping
-    public ResponseEntity<TarefaResponseDTO> criarTarefa(
-            @RequestBody TarefaRequestDTO dto) {
-
+    public ResponseEntity<TarefaResponseDTO> criarTarefa(@RequestBody TarefaRequestDTO dto) {
         TarefaResponseDTO response = tarefaService.criarTarefa(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // ==================== MÉTODOS GET ====================
-
     @GetMapping("/{id}")
     public ResponseEntity<TarefaResponseDTO> buscarPorId(@PathVariable String id) {
-        TarefaResponseDTO tarefa = tarefaService.buscarPorId(id);
-        return ResponseEntity.ok(tarefa);
+        return ResponseEntity.ok(tarefaService.buscarPorId(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<TarefaResponseDTO>> buscarPorUsuarioId(
-            @RequestParam("usuarioId") Long usuarioId) {
-
-        List<TarefaResponseDTO> tarefas = tarefaService.buscarPorUsuarioId(usuarioId);
-        return ResponseEntity.ok(tarefas);
+    public ResponseEntity<List<TarefaResponseDTO>> buscarPorUsuarioId(@RequestParam Long usuarioId) {
+        return ResponseEntity.ok(tarefaService.buscarPorUsuarioId(usuarioId));
     }
 
     @GetMapping("/periodo")
     public ResponseEntity<List<TarefaResponseDTO>> buscarPorPeriodo(
-            @RequestParam("dataInicial")
-            @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm") LocalDateTime dataInicial,
+            @RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm") LocalDateTime dataInicial,
+            @RequestParam @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm") LocalDateTime dataFinal) {
+        return ResponseEntity.ok(tarefaService.buscarPorPeriodo(dataInicial, dataFinal));
+    }
 
-            @RequestParam("dataFinal")
-            @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm") LocalDateTime dataFinal) {
+    // ==================== NOVOS MÉTODOS ====================
 
-        List<TarefaResponseDTO> tarefas = tarefaService.buscarPorPeriodo(dataInicial, dataFinal);
-        return ResponseEntity.ok(tarefas);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarTarefa(@PathVariable String id) {
+        tarefaService.deletarTarefa(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TarefaResponseDTO> atualizarTarefa(
+            @PathVariable String id,
+            @RequestBody TarefaRequestDTO dto) {
+        return ResponseEntity.ok(tarefaService.atualizarTarefa(id, dto));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<TarefaResponseDTO> alterarStatus(
+            @PathVariable String id,
+            @RequestBody StatusTarefa status) {           // ← Agora vem no corpo da requisição
+        return ResponseEntity.ok(tarefaService.alterarStatus(id, status));
     }
 }
