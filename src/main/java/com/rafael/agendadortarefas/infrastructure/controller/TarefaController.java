@@ -61,7 +61,8 @@ public class TarefaController {
     @PatchMapping("/{id}/status")
     public ResponseEntity<TarefaResponseDTO> alterarStatus(
             @PathVariable String id,
-            @RequestBody StatusTarefa status) {           // ← Agora vem no corpo da requisição
+            @RequestParam("status") StatusTarefa status) {
+
         return ResponseEntity.ok(tarefaService.alterarStatus(id, status));
     }
 }
