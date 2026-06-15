@@ -5,6 +5,11 @@ spring:
   application:
     name: agendador-tarefas
 
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+
 jwt:
   expiration: 3600000
 
