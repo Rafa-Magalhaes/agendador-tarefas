@@ -1,16 +1,10 @@
-server:
-  port: 8081
-
 spring:
-  application:
-    name: agendador-tarefas
-
   data:
     mongodb:
-      host: localhost
-      port: 27017
+      uri: mongodb://localhost:27017/db_agendador
 
 jwt:
+  secret: SUA_CHAVE_SECRETA_AQUI
   expiration: 3600000
 
 usuario:
