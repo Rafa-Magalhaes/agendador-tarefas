@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+@SuppressWarnings("deprecation")
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
