@@ -59,6 +59,15 @@ public class TarefaService {
                 .toList();
     }
 
+    // ==================== Tarefas Pendentes (usado pelo Scheduler do BFF) ====================
+    @Transactional(readOnly = true)
+    public List<TarefaResponseDTO> buscarTarefasPendentes() {
+        List<Tarefa> tarefas = tarefaRepository.findByStatus(StatusTarefa.PENDENTE);
+        return tarefas.stream()
+                .map(tarefaConverter::toResponseDTO)
+                .toList();
+    }
+
     // ==================== DELETE ====================
     @Transactional
     public void deletarTarefa(String id) {
