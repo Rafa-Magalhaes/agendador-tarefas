@@ -4,10 +4,12 @@ server:
 spring:
   application:
     name: agendador-tarefas
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
 jwt:
-  secret: minhaChaveSuperSecretaParaAssinarOToken1234567890
-  expiration: 3600000   # 1 hora
+  secret: ${JWT_SECRET:minhaChaveSuperSecretaParaAssinar0Token1234567890}
+  expiration: 3600000
 
 usuario:
   service:

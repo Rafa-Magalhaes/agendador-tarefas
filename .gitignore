@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Arquivos Sensíveis ###
+# Perfis de desenvolvimento (nunca subir)
+application-dev.yml
