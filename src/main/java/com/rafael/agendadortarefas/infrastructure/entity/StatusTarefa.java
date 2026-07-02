@@ -1,9 +1,9 @@
 package com.rafael.agendadortarefas.infrastructure.entity;
 
 public enum StatusTarefa {
-
     PENDENTE,
-    ENVIADO,
+    ENVIO,
     CANCELADO,
+    CONCLUIDA,
     FALHOU
 }

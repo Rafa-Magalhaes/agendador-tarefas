@@ -1,76 +1,72 @@
 package com.rafael.agendadortarefas.infrastructure.security;
 
+import com.rafael.agendadortarefas.infrastructure.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
+@SuppressWarnings("deprecation")
 @Component
+@RequiredArgsConstructor
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    private final JwtProperties jwtProperties;
 
-    @Value("${jwt.expiration}")
-    private Long expiration;
-
-    @Value("${spring.application.name:agendador-tarefas}")
-    private String serviceName;
-
-    private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes());
+    private SecretKey getSigningKey() {
+        return Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
     }
 
-    // ====================== GERAÇÃO DE TOKEN ======================
     public String generateServiceToken() {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("tokenType", "SERVICE");
-        claims.put("serviceName", serviceName);
-        claims.put("scope", "internal:read-users");
+        long expiration = jwtProperties.getServiceExpirationMs();
 
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(serviceName)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .subject("agendador-tarefas")
+                .claim("serviceName", "agendador-tarefas")
+                .claim("type", "SERVICE")
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSigningKey())
                 .compact();
     }
 
-    // ====================== EXTRAÇÃO DE DADOS ======================
-    public Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(getSigningKey())
-                .build()                    // ← Esta linha estava faltando
-                .parseClaimsJws(token)
-                .getBody();
+    public boolean isValidServiceToken(String token) {
+        try {
+            Claims claims = extractAllClaims(token);
+            String type = claims.get("type", String.class);
+            return "SERVICE".equals(type);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
+    public boolean isTokenExpired(String token) {
+        try {
+            Claims claims = extractAllClaims(token);
+            return claims.getExpiration().before(new Date());
+        } catch (Exception e) {
+            return true;
+        }
     }
 
     public String extractTokenType(String token) {
-        return extractAllClaims(token).get("tokenType", String.class);
+        try {
+            Claims claims = extractAllClaims(token);
+            return claims.get("type", String.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    // ====================== VALIDAÇÕES ======================
-    public boolean isTokenExpired(String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
-    }
-
-    public boolean validateToken(String token) {
-        return !isTokenExpired(token);
-    }
-
-    public boolean isServiceToken(String token) {
-        return "SERVICE".equals(extractTokenType(token));
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }
