@@ -43,6 +43,12 @@ public class TarefaController {
         return ResponseEntity.ok(tarefaService.buscarPorPeriodo(dataInicial, dataFinal));
     }
 
+    // ==================== Usado pelo Scheduler do BFF ====================
+    @GetMapping("/pendentes")
+    public ResponseEntity<List<TarefaResponseDTO>> buscarTarefasPendentes() {
+        return ResponseEntity.ok(tarefaService.buscarTarefasPendentes());
+    }
+
     // ==================== NOVOS MÉTODOS ====================
 
     @DeleteMapping("/{id}")
