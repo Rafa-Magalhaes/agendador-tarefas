@@ -1,6 +1,7 @@
-package com.rafael.agendadortarefas.infrastructure.entity;
+package com.rafael.agendadortarefas.domain.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "tarefas")
@@ -29,5 +31,8 @@ public class Tarefa {
     @CreatedDate
     private LocalDateTime dataCriacao;
 
-    private StatusTarefa status = StatusTarefa.PENDENTE;
+    private String status;
+
+    @Builder.Default
+    private int tentativas = 0;
 }
