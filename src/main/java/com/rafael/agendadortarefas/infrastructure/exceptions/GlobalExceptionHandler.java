@@ -1,5 +1,6 @@
 package com.rafael.agendadortarefas.infrastructure.exceptions;
 
+import com.rafael.agendadortarefas.domain.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

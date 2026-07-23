@@ -1,15 +1,17 @@
-package com.rafael.agendadortarefas.infrastructure.dto;
+package com.rafael.agendadortarefas.api.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TarefaRequestDTO {
+public class BffAgendadorAgendamentoRequestDTO {
 
     private Long usuarioId;
 
