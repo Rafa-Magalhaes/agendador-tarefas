@@ -40,9 +40,9 @@ public class JwtUtil {
     public boolean isValidServiceToken(String token) {
         try {
             Claims claims = extractAllClaims(token);
-            String type = claims.get("type", String.class);
+            String type = claims.get("tokentype", String.class);
 
-            log.info(">>> [Agendador] Token recebido. Claim 'type' = {}", type);
+            log.info(">>> [Agendador] Token recebido. Claim 'tokentype' = {}", type);
 
             boolean valido = "SERVICE".equals(type);
             log.info(">>> [Agendador] Token válido? {}", valido);

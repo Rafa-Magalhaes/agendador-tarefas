@@ -2,7 +2,6 @@ package com.rafael.agendadortarefas.infrastructure.config;
 
 import com.rafael.agendadortarefas.infrastructure.security.JwtUtil;
 import feign.RequestInterceptor;
-import feign.RequestTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
