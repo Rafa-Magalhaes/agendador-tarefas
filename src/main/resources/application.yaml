@@ -7,8 +7,8 @@ spring:
 
   data:
     mongodb:
-      host: localhost
-      port: 27017
+      # URI unificada que o MongoConfig e os testes esperam encontrar
+      uri: ${MONGODB_URI:mongodb://localhost:27017/db_agendador}
 
 usuario:
   service:
@@ -16,3 +16,8 @@ usuario:
 
 tarefa:
   max-tentativas: 5
+
+jwt:
+  secret: ${APP_JWT_SECRET:chave-super-secreta-minima-32-caracteres-para-HS512-2026}
+  expiration-ms: 3600000
+  service-expiration-ms: 1800000
