@@ -10,16 +10,15 @@ public class TarefaConverter {
 
     // ====================== Entity → ResponseDTO ======================
     public AgendadorBffMailResponseDTO toResponseDTO(Tarefa tarefa) {
-        AgendadorBffMailResponseDTO response = new AgendadorBffMailResponseDTO();
-        response.setId(tarefa.getId());
-        response.setUsuarioId(tarefa.getUsuarioId());
-        response.setTitulo(tarefa.getTitulo());
-        response.setDescricao(tarefa.getDescricao());
-        response.setDataHoraAgendada(tarefa.getDataHoraAgendada());
-        response.setDataCriacao(tarefa.getDataCriacao());
-        response.setStatus(tarefa.getStatus());
-
-        return response;
+        return AgendadorBffMailResponseDTO.builder()
+                .id(tarefa.getId())
+                .usuarioId(tarefa.getUsuarioId())
+                .titulo(tarefa.getTitulo())
+                .descricao(tarefa.getDescricao())
+                .dataHoraAgendada(tarefa.getDataHoraAgendada())
+                .dataCriacao(tarefa.getDataCriacao())
+                .status(tarefa.getStatus())
+                .build();
     }
 
     // ====================== DTO → Entity ======================
