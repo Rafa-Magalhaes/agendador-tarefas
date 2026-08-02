@@ -1,4 +1,4 @@
-package com.rafael.agendadortarefas.config;
+package com.rafael.agendadortarefas.infrastructure.config;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;

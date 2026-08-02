@@ -8,7 +8,11 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
+<<<<<<< HEAD
 @ConfigurationProperties(prefix = "app.jwt")
+=======
+@ConfigurationProperties(prefix = "jwt")
+>>>>>>> origin/develop
 public class JwtProperties {
 
     private String secret;
