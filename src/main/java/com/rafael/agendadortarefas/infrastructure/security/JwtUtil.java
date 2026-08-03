@@ -4,13 +4,9 @@ import com.rafael.agendadortarefas.infrastructure.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-<<<<<<< HEAD
-import lombok.RequiredArgsConstructor;
-=======
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
->>>>>>> origin/develop
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -18,10 +14,7 @@ import java.util.Date;
 
 @SuppressWarnings("deprecation")
 @Component
-<<<<<<< HEAD
-=======
 @Slf4j
->>>>>>> origin/develop
 @RequiredArgsConstructor
 public class JwtUtil {
 
@@ -47,11 +40,6 @@ public class JwtUtil {
     public boolean isValidServiceToken(String token) {
         try {
             Claims claims = extractAllClaims(token);
-<<<<<<< HEAD
-            String type = claims.get("type", String.class);
-            return "SERVICE".equals(type);
-        } catch (Exception e) {
-=======
             String type = claims.get("tokentype", String.class);
 
             log.info(">>> [Agendador] Token recebido. Claim 'tokentype' = {}", type);
@@ -62,7 +50,6 @@ public class JwtUtil {
             return valido;
         } catch (Exception e) {
             log.error(">>> [Agendador] Erro ao validar Service Token: {}", e.getMessage());
->>>>>>> origin/develop
             return false;
         }
     }
@@ -76,26 +63,12 @@ public class JwtUtil {
         }
     }
 
-<<<<<<< HEAD
-    public String extractTokenType(String token) {
-        try {
-            Claims claims = extractAllClaims(token);
-            return claims.get("type", String.class);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-=======
->>>>>>> origin/develop
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-<<<<<<< HEAD
-=======
     }
 
     @PostConstruct
@@ -108,6 +81,5 @@ public class JwtUtil {
         } else {
             log.warn(">>> [Agendador] JWT Secret está NULO ou muito curto!");
         }
->>>>>>> origin/develop
     }
 }

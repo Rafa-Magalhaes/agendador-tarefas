@@ -1,11 +1,6 @@
 package com.rafael.agendadortarefas.infrastructure.repository;
 
-<<<<<<< HEAD
-import com.rafael.agendadortarefas.infrastructure.entity.Tarefa;
-import com.rafael.agendadortarefas.infrastructure.entity.StatusTarefa;
-=======
 import com.rafael.agendadortarefas.domain.entity.Tarefa;
->>>>>>> origin/develop
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,15 +11,6 @@ import java.util.Optional;
 @Repository
 public interface TarefaRepository extends MongoRepository<Tarefa, String> {
 
-<<<<<<< HEAD
-    List<Tarefa> findByUsuarioId(Long usuarioId);
-
-    Optional<Tarefa> findById(String id);
-
-    List<Tarefa> findByDataHoraAgendadaBetween(LocalDateTime dataInicial, LocalDateTime dataFinal);
-
-    List<Tarefa> findByStatus(StatusTarefa status);
-=======
     // ====================== DELETAR AGENDAMENTO  ======================
     Optional<Tarefa> findByIdAndUsuarioId(String id, Long usuarioId);
 
@@ -45,5 +31,4 @@ public interface TarefaRepository extends MongoRepository<Tarefa, String> {
 
     // ====================== BUSCAR POR PERÍODO ======================
     List<Tarefa> findByUsuarioIdAndDataHoraAgendadaBetween(Long usuarioId, LocalDateTime dataInicial, LocalDateTime dataFinal);
->>>>>>> origin/develop
 }
