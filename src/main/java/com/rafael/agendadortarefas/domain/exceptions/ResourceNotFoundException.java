@@ -1,4 +1,4 @@
-package com.rafael.agendadortarefas.infrastructure.exceptions;
+package com.rafael.agendadortarefas.domain.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
