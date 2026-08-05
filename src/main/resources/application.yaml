@@ -11,10 +11,6 @@ spring:
     mongodb:
       uri: ${MONGODB_URI:mongodb://localhost:27017/db_agendador}
 
-usuario:
-  service:
-    url: ${USUARIO_SERVICE_URL:http://localhost:8080}
-
 tarefa:
   max-tentativas: 5
 
